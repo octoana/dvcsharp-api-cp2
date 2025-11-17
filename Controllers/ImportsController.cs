@@ -26,6 +26,7 @@ namespace dvcsharp_core_api
       public IActionResult Post()
       {
          XmlDocument xmlDocument = new XmlDocument();
+         xmlDocument.XmlResolver = null;
          xmlDocument.Load(HttpContext.Request.Body);
 
          var entities = new List<Object>();
@@ -41,7 +42,10 @@ namespace dvcsharp_core_api
             //Console.WriteLine("Content: " + xmlItem.InnerXml);
 
             var xser = new XmlSerializer(Type.GetType(typeName));
-            var reader = new XmlTextReader(new StringReader(xmlItem.InnerXml));
+            var reader = new XmlTextReader(new StringReader(xmlItem.InnerXml))
+            {
+                DtdProcessing = DtdProcessing.Prohibit
+            };
 
             entities.Add(xser.Deserialize(reader));
          }
